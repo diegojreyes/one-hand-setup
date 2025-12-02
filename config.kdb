@@ -1,0 +1,117 @@
+
+;; KMonad Configuration for Laofree 75% Keyboard Layout
+;;
+;; =========================================================
+;; Configuration Definitions
+;; =========================================================
+(defcfg
+  ;; ---------------------------------------------------------------------------------
+  ;; IMPORTANT: Replace with actual kb device
+  ;; ---------------------------------------------------------------------------------
+  input  (device-file "/dev/input/by-id/usb-CX_2.4G_Wireless_Receiver-event-kbd")
+  output (uinput-sink "KMonad Laofree 75% Image-Based Dvorak Keyboard")
+
+  allthrough true
+  allow-cmd true
+)
+
+;; =========================================================
+;; Source Key Definitions (Physical Layout of Laofree 75% Keyboard)
+;; = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+(defsrc
+  ;; F-row (15 keys: Esc + F1-F12 + PrtSc + Del)
+  esc  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  prnt del
+
+  ;; Number/QWERTY Top Row (16 keys: Grv + 1-0 + - + = + Backspace + Home + End)
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc home end
+
+  ;; QWERTY Row (16 keys: Tab + Q-P + [ + ] + Return + PgUp + PgDn)
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    ret  pgup pgdn
+
+  ;; ASDF Row (13 keys: Caps + A-L + ; + ') - Removed 'bsls' as it's not physically present here due to vertical Enter.
+  caps a    s    d    f    g    h    j    k    l    scln apos
+
+  ;; ZXC Row (14 keys: LShift + Z-/ + RShift + Up)
+  lsft z    x    c    v    b    n    m    comm dot  /    rsft       up
+
+  ;; Bottom Row (10 keys: LCtrl + LWin + LAlt + Space + RAlt + Fn + RCtrl + Left + Down + Right)
+  lctl lmet lalt           spc            ralt fn   rctl       left down rght
+)
+;; =========================================================
+
+;; ---------------------------------------------------------
+;; Aliases 
+;; ---------------------------------------------------------
+(defalias
+  ;; Left Alt becomes a layer-toggle for num_layer on hold (200ms)
+  ;; If tapped, it will act as a regular 'lalt' key.
+  lalt-num (tap-hold 0 lalt (layer-toggle num_layer))
+  z-prog (tap-hold 25 z (layer-toggle prog_layer))
+)
+
+;; =========================================================
+;; Layers
+;; =========================================================
+
+;; ---------------------------------------------------------
+;; Base Layer (Right-Handed Dvorak layout) 
+;;
+;; ---------------------------------------------------------
+(deflayer right_handed_dvorak
+  ;; F-row (maps directly, unchanged)
+  esc  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  prnt del
+
+  grv  1    2    3    4    j    l    m    f    p    /    [    ]    bspc home end
+
+  tab  5    6    q    .    o    r    s    u    y    b    scln =    ret  pgup pgdn
+
+  @lalt-num 7    8    z    a    e    h    t    d    c    k    -
+  
+  lsft @z-prog    0    x    comm i    n    w    v    g    apos rsft       up
+
+  lctl lmet @lalt-num       spc            ralt fn   rctl       left down rght
+)
+
+;; ---------------------------------------------------------
+;; Numeric Layer (Activates when lalt is held)
+;; All other keys will fallthrough to the base layer.
+;; ---------------------------------------------------------
+(deflayer num_layer
+  ;; F-row (all fallthrough)
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _    _
+
+  ;; Top row (all fallthrough)
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _    _    _
+
+  ;; QWERTY row - T, Y, U, I become 1, 2, 3, 4
+  _    _    _    _    5    1    2    3    4    _    _    _    _    _    _    _
+
+  ;; ASDF row - G, H, J, K become 5, 6, 7, 8
+  _    _    _    _    6    9  0  7    8    _    _    _
+
+  ;; ZXC row (all fallthrough)
+  _    _    _    _    _     _    _         _    _    _    _    _          _
+
+  ;; Bottom row (all fallthrough)
+  _    _    _              _              _    _    _          _    _    _
+)
+
+(deflayer prog_layer
+  ;; F-row (all fallthrough)
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _    _
+
+  ;; Top row (all fallthrough)
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _    _    _
+
+  ;; QWERTY row - T, Y, U, I become 1, 2, 3, 4
+  _    _    _    _    _    [    ]    apos    /    _    _    _    _    _    _    _
+
+  ;; ASDF row - G, H, J, K become 5, 6, 7, 8
+  _    _    _    _    _    =    -    scln    esc    _    _    _
+
+  ;; ZXC row (all fallthrough)
+  _    _    _    _    _    _    _    _    _    _    _    _          _
+
+  ;; Bottom row (all fallthrough)
+  _    _    _              _              _    _    _          _    _    _
+)
